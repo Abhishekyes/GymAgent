@@ -947,19 +947,18 @@ function downloadICSFile() {
   icsLines.push("END:VCALENDAR");
   
   const icsString = icsLines.join("\r\n");
+  const blob = new Blob([icsString], { type: "text/calendar;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
   
   // Detect iOS Safari
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
                 (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   
   if (isIOS) {
-    // Navigate directly to data URI to trigger iOS native "Add Calendar" popup
-    const uri = "data:text/calendar;charset=utf-8," + encodeURIComponent(icsString);
-    window.location.href = uri;
+    // Navigate directly to Blob URL to trigger iOS native calendar import popup automatically
+    window.location.href = url;
   } else {
     // Standard file download for PC and Android
-    const blob = new Blob([icsString], { type: "text/calendar;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
     a.download = "muscle_meal_schedule.ics";
