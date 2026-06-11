@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muscle Meal Coach | Personal Diet Reminder AI Agent</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="shortcut icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💪</text></svg>">
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="logo-container">
+      <div class="logo-icon">💪</div>
+      <div class="logo-text">
+        <h1>Muscle Meal <span>Coach</span></h1>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn" id="btn-shopping-list">
+        🛒 Shopping List
+      </button>
+      <button class="btn" id="btn-setup-guide">
+        📱 Phone Setup
+      </button>
+      <button class="btn btn-primary" id="btn-download-ics">
+        📅 Download ICS Calendar
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Split Layout -->
+  <main class="main-container">
+
+    <!-- Left Panel: Chat Console -->
+    <section class="chat-panel" aria-label="Coach Chat Panel">
+      <div class="chat-header">
+        <div class="coach-info">
+          <h2 style="font-size: 1.1rem; font-weight: 700;">MUSCLE MEAL COACH</h2>
+          <div class="coach-status">
+            <span class="status-indicator"></span>
+            <span class="status-text">Your AI Gym Diet Coach</span>
+          </div>
+        </div>
+        <button class="btn" id="btn-edit-profile" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">
+          ⚙️ Profile
+        </button>
+      </div>
+
+      <!-- Chat Message Log -->
+      <div class="chat-messages" id="chat-messages-box">
+        <div class="message coach">
+          Welcome back! I am your <strong>MUSCLE MEAL COACH</strong>. I'm here to ensure you hit your daily goals and stay perfectly consistent on your muscle-gain diet.
+          <br><br>
+          You can talk to me directly using the input below, or try one of the quick actions!
+          <span class="message-time">Just now</span>
+        </div>
+      </div>
+
+      <!-- Quick Commands Row -->
+      <div class="quick-cmds-container">
+        <button class="quick-cmd-btn" data-cmd="create reminders">📋 Create Reminders List</button>
+        <button class="quick-cmd-btn" data-cmd="create weekly shopping list">🛒 Weekly Shopping List</button>
+        <button class="quick-cmd-btn" data-cmd="production simple setup">📱 Simple setup guide</button>
+        <button class="quick-cmd-btn" data-cmd="replace chicken with paneer">🍗 Veg Dinner Swap</button>
+        <button class="quick-cmd-btn" data-cmd="replace paneer with eggs">🥚 Paneer to Eggs Swap</button>
+      </div>
+
+      <!-- Chat Form -->
+      <div class="chat-input-container">
+        <form class="chat-form" id="chat-form">
+          <input type="text" class="chat-input" id="chat-input-field" placeholder="Type command, e.g. 'disable evening whey reminder'..." autocomplete="off">
+          <button type="submit" class="btn-send" id="btn-chat-send" title="Send command">
+            ➔
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Right Panel: Diet Dashboard -->
+    <section class="dashboard-panel" aria-label="Diet Dashboard">
+      <div class="dashboard-header">
+        <div class="dashboard-title">
+          <h2>Diet & Reminders Dashboard</h2>
+          <p>Live schedule adjusted to your daily workout and sleep routine</p>
+        </div>
+      </div>
+
+      <!-- Top Metrics Dashboard -->
+      <div class="top-metrics-grid">
+        <!-- Calorie Target -->
+        <div class="metric-card">
+          <div class="metric-header">
+            <span>Daily Calories</span>
+            <span>⚡</span>
+          </div>
+          <div class="metric-value" id="val-calories">2700 <span>kcal</span></div>
+          <div class="metric-bar-container">
+            <div class="metric-bar" id="bar-calories" style="width: 100%;"></div>
+          </div>
+          <span style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Target range: 2600 - 2800</span>
+        </div>
+        <!-- Protein Target -->
+        <div class="metric-card">
+          <div class="metric-header">
+            <span>Daily Protein</span>
+            <span>🥩</span>
+          </div>
+          <div class="metric-value" id="val-protein">170 <span>g</span></div>
+          <div class="metric-bar-container">
+            <div class="metric-bar" id="bar-protein" style="width: 100%;"></div>
+          </div>
+          <span style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Target range: 160 - 180g</span>
+        </div>
+        <!-- Gym Window -->
+        <div class="metric-card">
+          <div class="metric-header">
+            <span>Gym Schedule</span>
+            <span>🏋️</span>
+          </div>
+          <div class="metric-value" id="val-gym">8:30 - 10:30 <span>AM</span></div>
+          <span style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;" id="val-gym-sub">Duration: 2 hours</span>
+        </div>
+        <!-- Sleep Window -->
+        <div class="metric-card">
+          <div class="metric-header">
+            <span>Sleep Routine</span>
+            <span>🌙</span>
+          </div>
+          <div class="metric-value" id="val-sleep">12:00 - 12:30 <span>AM</span></div>
+          <span style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;" id="val-sleep-sub">Target: 7.5 - 8.5 hrs</span>
+        </div>
+      </div>
+      <!-- Schedule Table Section -->
+      <div class="schedule-table-card" style="margin-bottom: 2rem;">
+        <div class="table-card-header">
+          <h3 style="font-size: 1.2rem; font-weight: 700;">📋 Daily Schedule Summary</h3>
+          <button class="btn btn-primary" id="btn-copy-table" style="font-size: 0.8rem; padding: 0.35rem 0.75rem;">
+            🔗 Copy MD Table
+          </button>
+        </div>
+        <div class="table-container">
+          <table class="schedule-table">
+            <thead>
+              <tr>
+                <th style="width: 150px;">Reminder Time</th>
+                <th style="width: 150px;">Eat Time</th>
+                <th>Meal Details</th>
+              </tr>
+            </thead>
+            <tbody id="schedule-table-body">
+              <!-- Dynamically populated by app.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Schedule Section -->
+      <div class="section-title">
+        ⏰ Dynamic Meal Reminders (Notification matches 1 hour before meal)
+      </div>
+
+      <!-- Meal Cards Grid -->
+      <div class="reminders-grid" id="reminders-grid-box">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+    </section>
+  </main>
+
+  <!-- Setup Guide Modal -->
+  <div class="modal-overlay" id="modal-setup">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>📱 Mobile Reminder Setup Guide</h3>
+        <button class="modal-close" id="close-modal-setup">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>To run these reminders on your phone automatically, choose one of these simple configurations:</p>
+        
+        <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">
+          <h4>1. Google Calendar (Most Reliable / Multi-device)</h4>
+          <ol>
+            <li>Click the <strong>Download ICS Calendar</strong> button in the header.</li>
+            <li>Go to <a href="https://calendar.google.com" target="_blank" style="color: var(--accent);">calendar.google.com</a> on your computer.</li>
+            <li>Click <em>Settings</em> (gear icon) ➔ <em>Import & export</em>.</li>
+            <li>Upload the downloaded <code>muscle_meal_schedule.ics</code> file.</li>
+            <li>Set up notification sounds/banners on your phone's Calendar App.</li>
+          </ol>
+        </div>
+
+        <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">
+          <h4>2. Apple Reminders / Todoist</h4>
+          <ol>
+            <li>Type <code>create Apple Reminder text</code> in the coach console.</li>
+            <li>Copy the output directly.</li>
+            <li>Open **Todoist** on desktop, paste the items into the task field (Todoist automatically parses dates like "every day at 6:15 AM").</li>
+            <li>For **Apple Reminders**, you can create a text list and bulk paste or use the iPhone Shortcuts app to import reminders.</li>
+          </ol>
+        </div>
+
+        <div>
+          <h4>3. iPhone Shortcuts Automation</h4>
+          <p>Create a Shortcut containing a list of your meal times and configure recurring notifications via "Time of Day" Automations. (Use the Copy buttons on each card to paste recipe and ingredients text directly into the reminders).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Settings Modal -->
+  <div class="modal-overlay" id="modal-profile">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>⚙️ Edit Profile & Gym Schedule</h3>
+        <button class="modal-close" id="close-modal-profile">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="input-age">Age (Years)</label>
+          <input type="number" class="form-input" id="input-age" value="27">
+        </div>
+        <div class="form-group">
+          <label for="input-weight">Weight (kg)</label>
+          <input type="number" class="form-input" id="input-weight" value="76">
+        </div>
+        <div class="form-group">
+          <label for="input-height">Height</label>
+          <input type="text" class="form-input" id="input-height" value="5'5&quot;">
+        </div>
+        <div class="form-group">
+          <label for="input-gym-start">Gym Window Start Time</label>
+          <input type="time" class="form-input" id="input-gym-start" value="08:30">
+        </div>
+        <div class="form-group">
+          <label for="input-gym-end">Gym Window End Time</label>
+          <input type="time" class="form-input" id="input-gym-end" value="10:30">
+        </div>
+        <div class="form-group">
+          <label for="input-sleep-start">Sleep Time (Approx. Sleep Start)</label>
+          <input type="time" class="form-input" id="input-sleep-start" value="00:00">
+        </div>
+        <button class="btn btn-primary" id="btn-save-profile" style="margin-top: 1rem;">
+          Save Profile Settings
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shopping List Modal -->
+  <div class="modal-overlay" id="modal-shopping">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>🛒 Weekly Shopping List (Sunday Prep)</h3>
+        <button class="modal-close" id="close-modal-shopping">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>This is your personalized weekly shopping list based on your current protein sources and swaps:</p>
+        <ul id="shopping-list-items" style="list-style: none; padding-left: 0;">
+          <!-- Rendered dynamically -->
+        </ul>
+        <button class="btn btn-primary" id="btn-copy-shopping">📋 Copy Shopping List</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success/Info Toast -->
+  <div class="toast" id="toast-message">Copied to clipboard!</div>
+
+  <script src="app.js"></script>
+</body>
+</html>
